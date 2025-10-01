@@ -1,146 +1,162 @@
+"use client";
+
 import Head from "next/head";
 
 export default function Home() {
   return (
     <>
       <Head>
-        <title>Donut da Amizade</title>
+        <title>Neo Dots - Treine sua Mecânica</title>
         <link
           rel="icon"
-          href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🍩</text></svg>`}
+          href={`data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 fontSize=%2290%22>🎮</text></svg>`}
         />
         <script src="https://cdn.tailwindcss.com"></script>
       </Head>
 
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 to-amber-50 py-8 px-4">
-        <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl md:text-5xl font-bold text-orange-800 mb-4">
-              🍩 Donut da Amizade
-            </h1>
-            <p className="text-lg text-orange-700 max-w-2xl mx-auto leading-relaxed">
-              Em sinal da nossa amizade, decidi criar um álbum digital que reúne
-              fotos e “mandamentos” como forma de mostrar o quanto me importo.
-              Além de registrar lembranças, este espaço também é um exercício
-              pessoal para me ajudar a melhorar na programação. Inspirado pelo
-              donut, transformei essa ideia em um site especial.
+      <style jsx global>{`
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&display=swap");
+
+        body {
+          font-family: "Inter", sans-serif;
+        }
+
+        .font-mono {
+          font-family: "JetBrains Mono", monospace;
+        }
+
+        @keyframes glow-pulse {
+          0%,
+          100% {
+            opacity: 0.5;
+          }
+          50% {
+            opacity: 0.8;
+          }
+        }
+
+        .animate-glow {
+          animation: glow-pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+          0%,
+          100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
+        }
+
+        .animate-float {
+          animation: float 6s ease-in-out infinite;
+        }
+      `}</style>
+
+      <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-slate-950 via-purple-950 to-slate-950">
+        {/* Animated background grid */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8b5cf620_1px,transparent_1px),linear-gradient(to_bottom,#8b5cf620_1px,transparent_1px)] bg-[size:4rem_4rem]" />
+
+        {/* Glowing orbs for depth */}
+        <div className="absolute left-1/4 top-1/4 h-96 w-96 rounded-full bg-purple-600/30 blur-[120px] animate-glow" />
+        <div
+          className="absolute bottom-1/4 right-1/4 h-96 w-96 rounded-full bg-violet-600/30 blur-[120px] animate-glow"
+          style={{ animationDelay: "1.5s" }}
+        />
+
+        {/* Main content */}
+        <div className="relative z-10 flex flex-col items-center gap-12 px-4">
+          {/* Logo/Title */}
+          <div className="flex flex-col items-center gap-4 animate-float">
+            <div className="flex items-center gap-3">
+              {/* Geometric logo icon */}
+              <div className="relative h-12 w-12">
+                <div className="absolute inset-0 rounded-lg bg-purple-500/40 blur-md" />
+                <div className="relative flex h-full w-full items-center justify-center rounded-lg border-2 border-purple-500 bg-purple-500/20 shadow-lg shadow-purple-500/50">
+                  <div className="h-4 w-4 rounded-full bg-purple-400 shadow-lg shadow-purple-400/50" />
+                </div>
+              </div>
+              <h1 className="text-5xl font-black tracking-tight text-white md:text-7xl drop-shadow-[0_0_30px_rgba(168,85,247,0.5)]">
+                NEO DOTS
+              </h1>
+            </div>
+            <p className="text-center font-mono text-sm uppercase tracking-widest text-purple-300 md:text-base">
+              Treine sua mecânica • Melhore seu dodge
             </p>
           </div>
 
-          {/* Mandamentos */}
-          <div className="mb-12">
-            <h2 className="text-3xl font-bold text-orange-800 mb-8 text-center">
-              Mandamentos
-            </h2>
+          {/* Play button */}
+          <div className="flex flex-col items-center gap-6">
+            <button
+              className="group relative h-16 overflow-hidden rounded-xl bg-gradient-to-r from-purple-600 to-violet-600 px-12 text-xl font-bold uppercase tracking-wider text-white shadow-lg shadow-purple-500/50 transition-all hover:scale-105 hover:shadow-xl hover:shadow-purple-500/60"
+              onMouseEnter={(e) => {
+                const arrow = e.currentTarget.querySelector(".arrow");
+                if (arrow) arrow.classList.add("translate-x-1");
+              }}
+              onMouseLeave={(e) => {
+                const arrow = e.currentTarget.querySelector(".arrow");
+                if (arrow) arrow.classList.remove("translate-x-1");
+              }}
+            >
+              <span className="relative z-10 flex items-center gap-3">
+                Jogar
+                <svg
+                  className="arrow h-6 w-6 transition-transform"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              </span>
+              {/* Animated background effect */}
+              <div className="absolute inset-0 -z-0 bg-white opacity-0 transition-opacity group-hover:opacity-10" />
+            </button>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-orange-400 hover:shadow-xl transition-shadow">
-                <h3 className="text-xl font-semibold text-orange-800 mb-3 flex items-center">
-                  🎫 1 - Vale Role Mensal
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Cada amigo tem direito a um "ticket" por mês para obrigar o
-                  outro a sair, sem desculpas! Não é acumulativo, mas garante ao
-                  menos um momento juntos.
-                </p>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-amber-400 hover:shadow-xl transition-shadow">
-                <h3 className="text-xl font-semibold text-orange-800 mb-3 flex items-center">
-                  💬 2 - Sinceridade Sempre
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Nada de mentir nem omitir quando algo estiver afetando a
-                  amizade. Comunicação é a base da confiança.
-                </p>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-orange-400 hover:shadow-xl transition-shadow">
-                <h3 className="text-xl font-semibold text-orange-800 mb-3 flex items-center">
-                  📱 3 - Contato Frequente
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Manter contato de forma natural e frequente. Seja para
-                  desabafar ou para falar besteira. Amigos são rede de apoio.
-                </p>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-amber-400 hover:shadow-xl transition-shadow">
-                <h3 className="text-xl font-semibold text-orange-800 mb-3 flex items-center">
-                  📸 4 - Memórias Registradas
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Sempre que possível, registrar os momentos em fotos. Criar
-                  lembranças é tão importante quanto vivê-las.
-                </p>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-orange-400 hover:shadow-xl transition-shadow">
-                <h3 className="text-xl font-semibold text-orange-800 mb-3 flex items-center">
-                  🎉 5 - Celebrar Conquistas
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Nunca deixar passar em branco as pequenas ou grandes vitórias
-                  do outro. Amizade também é comemorar juntos.
-                </p>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-amber-400 hover:shadow-xl transition-shadow">
-                <h3 className="text-xl font-semibold text-orange-800 mb-3 flex items-center">
-                  🌱 6 - Respeitar Espaços
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Entender quando o outro precisa de tempo sozinho, sem
-                  interpretar isso como afastamento.
-                </p>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-orange-400 hover:shadow-xl transition-shadow">
-                <h3 className="text-xl font-semibold text-orange-800 mb-3 flex items-center">
-                  💝 7 - Cuidado Recíproco
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Pequenos gestos contam: perguntar se chegou bem, mandar
-                  mensagem inesperada, ou lembrar de algo importante para o
-                  outro, coisas do tipo!
-                </p>
-              </div>
-
-              <div className="bg-white rounded-xl p-6 shadow-lg border-l-4 border-amber-400 hover:shadow-xl transition-shadow">
-                <h3 className="text-xl font-semibold text-orange-800 mb-3 flex items-center">
-                  🍽️ 8 - Comida!
-                </h3>
-                <p className="text-gray-700 leading-relaxed">
-                  Comer juntos! Desde os tempos mais antigos, dividir comida foi
-                  uma forma natural de criar e fortalecer laços, ta na genética.
-                </p>
-              </div>
+            {/* Secondary options */}
+            <div className="flex gap-4">
+              <button className="font-mono text-sm uppercase tracking-wider text-purple-400 hover:text-purple-300 transition-colors">
+                Como Jogar
+              </button>
+              <button className="font-mono text-sm uppercase tracking-wider text-purple-400 hover:text-purple-300 transition-colors">
+                Recordes
+              </button>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl p-8 shadow-lg">
-            <h2 className="text-2xl font-bold text-orange-800 mb-6 flex items-center">
-              🚀 Próximos passos
-            </h2>
-            <ul className="space-y-3 text-gray-700">
-              <li className="flex items-start">
-                <span className="text-orange-500 mr-3">•</span>
-                Adicionar página de álbum com fotos e legendas (em
-                desenvolvimento).
-              </li>
-              <li className="flex items-start">
-                <span className="text-orange-500 mr-3">•</span>
-                Adicionar lembretes automáticos para os Vale Roles.
-              </li>
-              <li className="flex items-start">
-                <span className="text-orange-500 mr-3">•</span>
-                Interagir para pensar em ideias juntos!
-              </li>
-            </ul>
+          {/* Stats preview */}
+          <div className="mt-8 flex gap-8 rounded-lg border border-purple-500/30 bg-purple-950/30 px-8 py-4 backdrop-blur-sm shadow-lg">
+            <div className="flex flex-col items-center gap-1">
+              <span className="font-mono text-2xl font-bold text-purple-400">
+                0
+              </span>
+              <span className="text-xs uppercase tracking-wider text-purple-300/70">
+                Melhor Score
+              </span>
+            </div>
+            <div className="h-full w-px bg-purple-500/30" />
+            <div className="flex flex-col items-center gap-1">
+              <span className="font-mono text-2xl font-bold text-violet-400">
+                0
+              </span>
+              <span className="text-xs uppercase tracking-wider text-purple-300/70">
+                Partidas
+              </span>
+            </div>
           </div>
         </div>
-      </div>
+
+        {/* Version indicator */}
+        <div className="absolute bottom-4 right-4 font-mono text-xs text-purple-400/50">
+          v0.1.0 ALPHA
+        </div>
+      </main>
     </>
   );
 }
