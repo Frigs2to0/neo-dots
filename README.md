@@ -1,3 +1,3 @@
-# donut-of-friendship
+# neo-dots
 
 Projeto para treinar programação
