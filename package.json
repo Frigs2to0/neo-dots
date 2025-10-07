@@ -4,8 +4,9 @@
   "description": "Projeto para treinar programação",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev",
-    "db": "docker compose -f infra/compose.yaml up -d",
+    "dev": "npm run db:up && next dev",
+    "db:up": "docker compose -f infra/compose.yaml up -d",
+    "db:stop": "docker compose -f infra/compose.yaml stop",
     "db:down": "docker compose -f infra/compose.yaml down",
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write .",
