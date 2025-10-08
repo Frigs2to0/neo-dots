@@ -9,6 +9,6 @@ test("GET to /api/v1/status should return 200", async () => {
     expect(responseBody.updated_at).toEqual(parseUpdatedAt)
 
     expect(responseBody.dependencies.database.db_version).toBe("16.0")
-    expect(typeof responseBody.dependencies.database.max_connections).toBe('number')
-    expect(typeof responseBody.dependencies.database.db_active_connection).toBe('number')
+    expect(responseBody.dependencies.database.max_connections).toBe(100)
+    expect(responseBody.dependencies.database.db_active_connections).toBe(1)
 })
