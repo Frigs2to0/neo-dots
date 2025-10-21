@@ -6,7 +6,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Dominokas - Torneios de Deadlock</title>
+        <title>Dominokas</title>
         <meta name="description" content="Torneios semanais de Deadlock todo domingo às 20h" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
@@ -22,12 +22,12 @@ export default function Home() {
           <div className="hero-content">
             <h1 className="title">
               <span className="title-main">DOMINOKAS</span>
-              <span className="title-sub">Torneios de Deadlock</span>
+              <span className="title-sub">Eventos de Deadlock</span>
             </h1>
             <p className="tagline">Todo Domingo • 20:00</p>
             <div className="cta-buttons">
-              <button className="btn btn-primary">Participar Agora</button>
-              <button className="btn btn-secondary">Saiba Mais</button>
+              <button className="btn btn-primary">Quero Jogar</button>
+              <button className="btn btn-secondary">Assistir</button>
             </div>
           </div>
         </header>
@@ -37,9 +37,7 @@ export default function Home() {
           <div className="section-content">
             <h2 className="section-title">O que é Dominokas?</h2>
             <p className="section-text">
-              Dominokas é o maior torneio semanal de <strong>Deadlock</strong> da comunidade brasileira. Toda semana,
-              jogadores se reúnem para competir em partidas emocionantes, testar suas habilidades e conquistar a glória
-              no campo de batalha.
+              Dominokas é um evento que acontece todo domingo às 20h. São partidas personalizadas com o Chat! As partidas são feitas com um sistema de Draft (pick's e ban's) e é <strong>transmitida</strong> e narrada pelo Nokeimee, em live.
             </p>
           </div>
         </section>
@@ -51,23 +49,23 @@ export default function Home() {
             <div className="features-grid">
               <div className="feature-card">
                 <div className="feature-icon">🎮</div>
-                <h3>Inscrição Fácil</h3>
+                <h3>Inscrição Simples</h3>
                 <p>Entre no nosso Discord e registre-se através do bot automatizado</p>
               </div>
               <div className="feature-card">
                 <div className="feature-icon">⚔️</div>
-                <h3>Formato Competitivo</h3>
-                <p>Partidas organizadas com sistema de brackets e eliminatórias</p>
+                <h3>Experiência Competitiva</h3>
+                <p>Partidas organizadas com Balanceamento de Times por MMR, e Draft de Heróis(Ban's e Pick's)</p>
               </div>
               <div className="feature-card">
-                <div className="feature-icon">🏆</div>
+                <div className="feature-icon">🏅</div>
                 <h3>Premiação</h3>
-                <p>Os melhores jogadores ganham reconhecimento e prêmios exclusivos</p>
+                <p>Os 3 melhores jogadores de cada edição são analisados e honrados com um Cargo no Discord.</p>
               </div>
               <div className="feature-card">
                 <div className="feature-icon">📅</div>
-                <h3>Toda Semana</h3>
-                <p>Novos torneios todo domingo às 20h, sem falta</p>
+                <h3>Toda Domingo</h3>
+                <p>Dominokas acontece semanalmente às 20h, todos os Domingos!</p>
               </div>
             </div>
           </div>
