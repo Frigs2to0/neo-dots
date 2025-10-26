@@ -14,20 +14,31 @@ export default function Home() {
       <div className="container">
         {/* Hero Section */}
         <header className="hero">
-          <div className="neon-splatter top-left"></div>
-          <div className="neon-splatter top-right"></div>
-          <div className="neon-splatter bottom-left"></div>
-          <div className="neon-splatter bottom-right"></div>
-
           <div className="hero-content">
-            <h1 className="title">
-              <span className="title-main">DOMINOKAS</span>
+            <div className="title">
+              <img
+                src="/images/title.svg"
+                alt="Dominokas"
+                className="logo"
+              />
               <span className="title-sub">Eventos de Deadlock</span>
-            </h1>
+            </div>
             <p className="tagline">Todo Domingo • 20:00</p>
             <div className="cta-buttons">
-              <button className="btn btn-primary">Quero Jogar</button>
-              <button className="btn btn-secondary">Assistir</button>
+              <a
+                href="https://discord.gg/2tMUabCsUK"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <button className="btn btn-primary">Quero Jogar</button>
+              </a>
+              <a
+                href="https://www.twitch.tv/nokeimee"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <button className="btn btn-secondary">Assistir</button>
+              </a>
             </div>
           </div>
         </header>
@@ -37,7 +48,9 @@ export default function Home() {
           <div className="section-content">
             <h2 className="section-title">O que é Dominokas?</h2>
             <p className="section-text">
-              Dominokas é um evento que acontece todo domingo às 20h. São partidas personalizadas com o Chat! As partidas são feitas com um sistema de Draft (pick's e ban's) e é <strong>transmitida</strong> e narrada pelo Nokeimee, em live.
+              Dominokas é um evento que acontece todo domingo às 20h. São partidas personalizadas com o Chat! As
+              partidas são feitas com um sistema de Draft (pick's e ban's) e é <strong>transmitida</strong> e narrada
+              pelo Nokeimee, em live.
             </p>
           </div>
         </section>
@@ -76,7 +89,13 @@ export default function Home() {
           <div className="section-content">
             <h2 className="section-title">Pronto para Competir?</h2>
             <p className="section-text">Junte-se à comunidade Dominokas e mostre suas habilidades no Deadlock!</p>
-            <button className="btn btn-primary btn-large">Entrar no Discord</button>
+            <a
+              href="https://discord.gg/2tMUabCsUK"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <button className="btn btn-primary">Entrar no Discord</button>
+            </a>
           </div>
         </section>
 
@@ -103,18 +122,19 @@ export default function Home() {
         }
 
         :global(body) {
-          background: #0a0a0f;
+          background: #1B1B1B;
         }
 
         .container {
+          position: relative;
+          background: #1B1B1B; /* fundo liso pro resto do site */
+          color: #E4E4E4;
           min-height: 100vh;
-          background: #0a0a0f;
-          color: #ffffff;
           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
           overflow-x: hidden;
-          position: relative;
         }
 
+        /* Updated pattern overlay to use red tones */
         .container::before {
           content: '';
           position: fixed;
@@ -127,71 +147,39 @@ export default function Home() {
               45deg,
               transparent,
               transparent 2px,
-              rgba(255, 255, 255, 0.02) 2px,
-              rgba(255, 255, 255, 0.02) 4px
+              rgba(146, 119, 21, 0.02) 2px,
+              rgba(146, 119, 21, 0.02) 4px
             );
           pointer-events: none;
           z-index: 1;
         }
 
         /* Hero Section */
+        /* Added background image from first image provided */
         .hero {
           min-height: 100vh;
           display: flex;
           align-items: center;
           justify-content: center;
           position: relative;
-          padding: 1rem;
+          padding: 2rem;
+          background-image: url('/images/background.png'); /* textura */
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
         }
 
-        .neon-splatter {
+
+        /* Added overlay to darken background image for better text contrast */
+        .hero::before {
+          content: '';
           position: absolute;
-          width: 400px;
-          height: 400px;
-          border-radius: 50%;
-          filter: blur(80px);
-          opacity: 0.4;
-          animation: pulse 4s ease-in-out infinite;
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: rgba(27, 27, 27, 0.75);
           z-index: 0;
-        }
-
-        .top-left {
-          top: -200px;
-          left: -200px;
-          background: radial-gradient(circle, #ff0040, #8b0000);
-          animation-delay: 0s;
-        }
-
-        .top-right {
-          top: -150px;
-          right: -150px;
-          background: radial-gradient(circle, #ff0040, #8b0000);
-          animation-delay: 1s;
-        }
-
-        .bottom-left {
-          bottom: -150px;
-          left: -100px;
-          background: radial-gradient(circle, #ff0040, #8b0000);
-          animation-delay: 2s;
-        }
-
-        .bottom-right {
-          bottom: -200px;
-          right: -200px;
-          background: radial-gradient(circle, #ff0040, #8b0000);
-          animation-delay: 3s;
-        }
-
-        @keyframes pulse {
-          0%, 100% {
-            transform: scale(1);
-            opacity: 0.4;
-          }
-          50% {
-            transform: scale(1.1);
-            opacity: 0.6;
-          }
         }
 
         .hero-content {
@@ -203,46 +191,61 @@ export default function Home() {
         .title {
           display: flex;
           flex-direction: column;
-          gap: 0.5rem;
-          margin-bottom: 1rem;
+          align-items: center;
+          gap: 1rem;
+          margin-bottom: 1.5rem;
         }
 
-        .title-main {
-          font-size: clamp(3rem, 10vw, 7rem);
-          font-weight: 900;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          background: linear-gradient(135deg, #ff0040, #ff4d6d, #ff0040);
-          background-size: 200% 200%;
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          background-clip: text;
-          animation: gradient-shift 3s ease infinite;
-          text-shadow: 0 0 40px rgba(255, 0, 64, 0.5);
-          filter: drop-shadow(0 0 20px rgba(255, 0, 64, 0.8));
+        .logo-box {
+          width: clamp(300px, 60vw, 700px);
+          height: clamp(90px, 15vw, 180px);  /* altura menor = menos espaço vertical */
+          overflow: hidden;
+          margin: 0 auto 1rem;
+          position: relative;
         }
+
+        /* Added logo styling for SVG */
+        .logo {
+          width: 100%;
+          height: auto;
+          display: block;
+          transform: translateY(-10%); /* “invade” o espaço em branco de cima */
+          filter: drop-shadow(0 0 25px rgba(146, 119, 21, 0.8));
+          transition: transform 0.3s ease, filter 0.3s ease;
+        }
+
+        .logo-box:hover .logo {
+          transform: translateY(-10%) scale(1.02);
+          filter: drop-shadow(0 0 50px rgba(255, 176, 16, 0.9));
+        }
+
+        .logo:hover {
+          filter: drop-shadow(0 0 50px rgba(255, 176, 16, 0.9));
+        }
+
+        @keyframes logo-glow {
+          0%, 100% {
+            filter: drop-shadow(0 0 30px rgba(146, 119, 21, 0.8));
+          }
+          50% {
+            filter: drop-shadow(0 0 50px rgba(146, 119, 21, 1)) drop-shadow(0 0 80px rgba(255, 176, 16, 0.6));
+          }
+        }
+
 
         .title-sub {
           font-size: clamp(1.2rem, 3vw, 2rem);
           font-weight: 600;
-          color: #ffffff;
+          color: #E4E4E4;
           text-transform: uppercase;
           letter-spacing: 0.3em;
           opacity: 0.9;
         }
 
-        @keyframes gradient-shift {
-          0%, 100% {
-            background-position: 0% 50%;
-          }
-          50% {
-            background-position: 100% 50%;
-          }
-        }
-
+        /* Updated tagline color to yellow for highlights */
         .tagline {
           font-size: clamp(1.2rem, 2.5vw, 1.8rem);
-          color: #ff4d6d;
+          color: #FFB010;
           font-weight: 600;
           margin-bottom: 3rem;
           text-transform: uppercase;
@@ -250,14 +253,15 @@ export default function Home() {
           animation: glow 2s ease-in-out infinite;
         }
 
-        @keyframes glow {
+        @keyframes logo-glow {
           0%, 100% {
-            text-shadow: 0 0 10px rgba(255, 0, 64, 0.5);
+            filter: drop-shadow(0 0 30px rgba(146, 119, 21, 0.8));
           }
           50% {
-            text-shadow: 0 0 20px rgba(255, 0, 64, 0.8), 0 0 30px rgba(255, 0, 64, 0.6);
+            filter: drop-shadow(0 0 50px rgba(146, 119, 21, 1)) drop-shadow(0 0 80px rgba(255, 176, 16, 0.6));
           }
         }
+
 
         .cta-buttons {
           display: flex;
@@ -298,26 +302,30 @@ export default function Home() {
           height: 300px;
         }
 
+        /* Updated primary button to use red gradient with yellow text */
         .btn-primary {
-          background: linear-gradient(135deg, #ff0040, #c9184a);
-          color: #ffffff;
-          box-shadow: 0 0 20px rgba(255, 0, 64, 0.4);
+          background: linear-gradient(135deg, #927715, #6d5710);
+          color: #FFB010;
+          box-shadow: 0 0 20px rgba(146, 119, 21, 0.4);
+          font-weight: 800;
         }
 
         .btn-primary:hover {
-          box-shadow: 0 0 30px rgba(255, 0, 64, 0.6);
+          box-shadow: 0 0 30px rgba(146, 119, 21, 0.6), 0 0 40px rgba(255, 176, 16, 0.3);
           transform: translateY(-2px);
         }
 
+        /* Updated secondary button to use yellow border */
         .btn-secondary {
           background: transparent;
-          color: #ff4d6d;
-          border: 2px solid #ff4d6d;
+          color: #FFB010;
+          border: 2px solid #FFB010;
         }
 
         .btn-secondary:hover {
-          background: rgba(255, 0, 64, 0.1);
+          background: rgba(255, 176, 16, 0.1);
           transform: translateY(-2px);
+          box-shadow: 0 0 20px rgba(255, 176, 16, 0.3);
         }
 
         .btn-large {
@@ -344,12 +352,13 @@ export default function Home() {
           margin-bottom: 2rem;
           text-transform: uppercase;
           letter-spacing: 0.05em;
-          color: #ffffff;
+          color: #E4E4E4;
           position: relative;
           display: inline-block;
           width: 100%;
         }
 
+        /* Updated underline to use red color */
         .section-title::after {
           content: '';
           position: absolute;
@@ -358,7 +367,7 @@ export default function Home() {
           transform: translateX(-50%);
           width: 100px;
           height: 3px;
-          background: linear-gradient(90deg, transparent, #ff0040, transparent);
+          background: linear-gradient(90deg, transparent, #927715, transparent);
         }
 
         .section-text {
@@ -370,8 +379,9 @@ export default function Home() {
           margin: 0 auto 2rem;
         }
 
+        /* Updated strong text to use yellow for highlights */
         .section-text strong {
-          color: #ff4d6d;
+          color: #FFB010;
           font-weight: 700;
         }
 
@@ -383,9 +393,10 @@ export default function Home() {
           margin-top: 3rem;
         }
 
+        /* Updated feature card borders to use red */
         .feature-card {
           background: rgba(255, 255, 255, 0.03);
-          border: 1px solid rgba(255, 0, 64, 0.2);
+          border: 1px solid rgba(146, 119, 21, 0.3);
           border-radius: 1rem;
           padding: 2rem;
           text-align: center;
@@ -395,22 +406,24 @@ export default function Home() {
 
         .feature-card:hover {
           transform: translateY(-10px);
-          border-color: rgba(255, 0, 64, 0.5);
-          box-shadow: 0 10px 40px rgba(255, 0, 64, 0.2);
+          border-color: rgba(146, 119, 21, 0.6);
+          box-shadow: 0 10px 40px rgba(146, 119, 21, 0.3);
           background: rgba(255, 255, 255, 0.05);
         }
 
+        /* Updated icon glow to use red */
         .feature-icon {
           font-size: 3rem;
           margin-bottom: 1rem;
-          filter: drop-shadow(0 0 10px rgba(255, 0, 64, 0.5));
+          filter: drop-shadow(0 0 10px rgba(146, 119, 21, 0.5));
         }
 
+        /* Updated h3 color to yellow for highlights */
         .feature-card h3 {
           font-size: 1.5rem;
           font-weight: 700;
           margin-bottom: 1rem;
-          color: #ff4d6d;
+          color: #FFB010;
           text-transform: uppercase;
           letter-spacing: 0.05em;
         }
@@ -421,37 +434,34 @@ export default function Home() {
           color: #cccccc;
         }
 
-        /* CTA Section */
+        /* Updated CTA section background to use red gradient */
         .cta-section {
-          background: linear-gradient(135deg, rgba(255, 0, 64, 0.1), rgba(139, 0, 0, 0.1));
-          border-top: 1px solid rgba(255, 0, 64, 0.2);
-          border-bottom: 1px solid rgba(255, 0, 64, 0.2);
+          background: linear-gradient(135deg, rgba(146, 119, 21, 0.15), rgba(109, 87, 16, 0.1));
+          border-top: 1px solid rgba(146, 119, 21, 0.3);
+          border-bottom: 1px solid rgba(146, 119, 21, 0.3);
         }
 
         .cta-section .section-content {
-          text-align: center; /* centraliza todos os elementos filhos inline */
+          text-align: center;
         }
 
-        /* Scrollbar inteira */
+        /* Updated scrollbar to use red theme */
         ::-webkit-scrollbar {
-          width: 12px; /* largura da barra de rolagem */
+          width: 12px;
         }
 
-        /* Fundo da barra (track) */
         ::-webkit-scrollbar-track {
-          background: #0a0a0f; /* cor escura, igual ao fundo */
+          background: #1B1B1B;
         }
 
-        /* Parte que você arrasta (thumb) */
         ::-webkit-scrollbar-thumb {
-          background-color: #ff0040; /* cor da barra de rolagem */
-          border-radius: 6px; /* deixa arredondada */
-          border: 3px solid #0a0a0f; /* cria uma borda para ficar separada do track */
+          background-color: #927715;
+          border-radius: 6px;
+          border: 3px solid #1B1B1B;
         }
 
-        /* Ao passar o mouse */
         ::-webkit-scrollbar-thumb:hover {
-          background-color: #ff4d6d; /* cor ao passar o mouse */
+          background-color: #FFB010;
         }
 
         /* Footer */
@@ -466,6 +476,10 @@ export default function Home() {
 
         /* Responsive */
         @media (max-width: 768px) {
+          .logo {
+            width: clamp(250px, 80vw, 500px);
+          }
+
           .cta-buttons {
             flex-direction: column;
             align-items: center;
