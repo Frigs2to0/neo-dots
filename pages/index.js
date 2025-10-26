@@ -9,6 +9,8 @@ export default function Home() {
         <title>Dominokas</title>
         <meta name="description" content="Torneios semanais de Deadlock todo domingo às 20h" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/svg" href="/favicon.svg" />
+        <meta name="theme-color" content="#1B1B1B" />
       </Head>
 
       <div className="container">
