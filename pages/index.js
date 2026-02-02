@@ -41,6 +41,9 @@ export default function Home() {
               >
                 <button className="btn btn-secondary">Assistir</button>
               </a>
+              <a href="/draft">
+                <button className="btn btn-secondary">Draft com Timer</button>
+              </a>
             </div>
           </div>
         </header>
