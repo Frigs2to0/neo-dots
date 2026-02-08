@@ -4,9 +4,8 @@ import { useState } from "react"
 import Head from "next/head"
 
 export default function DraftCreate() {
-  const [bans, setBans] = useState(4)
-  const [picks, setPicks] = useState(6)
-  const [timer, setTimer] = useState(40)
+  const [timer, setTimer] = useState("40")
+  const [reserveTime, setReserveTime] = useState("60")
   const [links, setLinks] = useState(null)
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(null)
@@ -17,7 +16,7 @@ export default function DraftCreate() {
       const res = await fetch("/api/v1/draft", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ bans, picks, timerSeconds: timer }),
+        body: JSON.stringify({ bans: 2, picks: 6, timerSeconds: timer === "" ? 40 : Number(timer), reserveSeconds: reserveTime === "" ? 60 : Number(reserveTime) }),
       })
       const data = await res.json()
       setLinks(data.links)
@@ -50,33 +49,23 @@ export default function DraftCreate() {
           {!links ? (
             <div className="form">
               <label>
-                <span>Bans por time</span>
-                <input
-                  type="number"
-                  min={0}
-                  max={10}
-                  value={bans}
-                  onChange={(e) => setBans(Number(e.target.value))}
-                />
-              </label>
-              <label>
-                <span>Picks por time</span>
-                <input
-                  type="number"
-                  min={1}
-                  max={12}
-                  value={picks}
-                  onChange={(e) => setPicks(Number(e.target.value))}
-                />
-              </label>
-              <label>
-                <span>Timer (segundos)</span>
+                <span>Timer por turno (segundos)</span>
                 <input
                   type="number"
                   min={10}
                   max={120}
                   value={timer}
-                  onChange={(e) => setTimer(Number(e.target.value))}
+                  onChange={(e) => setTimer(e.target.value)}
+                />
+              </label>
+              <label>
+                <span>Tempo reserva por time (segundos)</span>
+                <input
+                  type="number"
+                  min={0}
+                  max={300}
+                  value={reserveTime}
+                  onChange={(e) => setReserveTime(e.target.value)}
                 />
               </label>
               <button className="btn-create" onClick={create} disabled={loading}>

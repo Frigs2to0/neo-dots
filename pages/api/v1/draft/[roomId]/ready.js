@@ -1,4 +1,4 @@
-const { getRoom, getRoleFromToken, performAction } = require("../../../../../lib/draft-rooms")
+const { getRoom, getRoleFromToken, setReady } = require("../../../../../lib/draft-rooms")
 
 export default function handler(req, res) {
   if (req.method !== "POST") {
@@ -9,13 +9,14 @@ export default function handler(req, res) {
   const room = getRoom(roomId)
   if (!room) return res.status(404).json({ error: "Sala não encontrada" })
 
-  const { token, heroId, heroName, noBan } = req.body || {}
+  const { token } = req.body || {}
   const role = getRoleFromToken(room, token)
-  if (!role || role === "streamer") {
-    return res.status(403).json({ error: "Sem permissão para esta ação" })
+
+  if (role !== "ambar" && role !== "safira") {
+    return res.status(403).json({ error: "Apenas times podem confirmar" })
   }
 
-  const result = performAction(room, role, heroId, heroName, noBan)
+  const result = setReady(room, role)
   if (result.error) return res.status(400).json(result)
   res.json({ ok: true })
 }

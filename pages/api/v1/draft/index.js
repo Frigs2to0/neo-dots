@@ -5,8 +5,8 @@ export default function handler(req, res) {
     return res.status(405).json({ error: "Method not allowed" })
   }
 
-  const { bans, picks, timerSeconds } = req.body || {}
-  const room = createRoom({ bans, picks, timerSeconds })
+  const { bans, picks, timerSeconds, reserveSeconds } = req.body || {}
+  const room = createRoom({ bans, picks, timerSeconds, reserveSeconds })
 
   const base = `${req.headers["x-forwarded-proto"] || "http"}://${req.headers.host}`
 
