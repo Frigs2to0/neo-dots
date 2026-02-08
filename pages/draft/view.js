@@ -1283,7 +1283,7 @@ export default function DraftView() {
   }
   const isMyTurn = canAct
 
-  // Auto-pick random hero when timer reaches 0 AND reserve time reaches 0
+  // Auto-action when timer reaches 0 AND reserve time reaches 0
   const autoPickedRef = useRef(null)
   useEffect(() => {
     if (!state || !canAct) return
@@ -1293,10 +1293,16 @@ export default function DraftView() {
       autoPickedRef.current = null
       return
     }
-    // Timer hit 0 and reserve hit 0 and it's our turn — pick a random available hero
+    // Timer hit 0 and reserve hit 0 and it's our turn — auto action
     const stepKey = `${state.stepIndex}`
     if (autoPickedRef.current === stepKey) return
     autoPickedRef.current = stepKey
+
+    if (state.currentAction === "ban") {
+      // Auto "Sem Ban" on timeout
+      sendHeroAction({ id: "no-ban", name: "Sem Ban" })
+      return
+    }
 
     const available = sortedHeroes.filter((h) => {
       const hid = getHeroId(h)
@@ -1304,7 +1310,7 @@ export default function DraftView() {
     })
     if (available.length === 0) return
     const random = available[Math.floor(Math.random() * available.length)]
-    pickHero(random)
+    sendHeroAction({ id: getHeroId(random), name: getHeroName(random) })
   }, [state, canAct, sortedHeroes, usedIds, role])
 
   if (!roomId || !token) {
