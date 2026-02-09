@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import Head from "next/head"
 import { useRouter } from "next/router"
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || ""
 const HEROES_URL = "https://assets.deadlock-api.com/v2/heroes"
 
 function getHeroImage(hero) {
@@ -1158,7 +1159,7 @@ export default function DraftView() {
   useEffect(() => {
     if (!roomId || !token) return
 
-    const es = new EventSource(`/api/v1/draft/${roomId}/stream?token=${token}`)
+    const es = new EventSource(`${API_URL}/api/v1/draft/${roomId}/stream?token=${token}`)
     eventSourceRef.current = es
 
     es.onmessage = (e) => {
@@ -1213,7 +1214,7 @@ export default function DraftView() {
   async function sendHeroAction(hero) {
     const isNoBan = hero?.id === "no-ban"
     const heroId = isNoBan ? null : getHeroId(hero)
-    await fetch(`/api/v1/draft/${roomId}/action`, {
+    await fetch(`${API_URL}/api/v1/draft/${roomId}/action`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -1275,7 +1276,7 @@ export default function DraftView() {
   const canAct = state && state.started && !state.finished && role !== "streamer" && state.currentTeam === role
 
   async function handleReady() {
-    await fetch(`/api/v1/draft/${roomId}/ready`, {
+    await fetch(`${API_URL}/api/v1/draft/${roomId}/ready`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token }),

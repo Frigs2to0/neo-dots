@@ -3,6 +3,8 @@
 import { useState } from "react"
 import Head from "next/head"
 
+const API_URL = process.env.NEXT_PUBLIC_API_URL || ""
+
 export default function DraftCreate() {
   const [timer, setTimer] = useState("40")
   const [reserveTime, setReserveTime] = useState("60")
@@ -13,7 +15,7 @@ export default function DraftCreate() {
   async function create() {
     setLoading(true)
     try {
-      const res = await fetch("/api/v1/draft", {
+      const res = await fetch(`${API_URL}/api/v1/draft`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bans: 2, picks: 6, timerSeconds: timer === "" ? 40 : Number(timer), reserveSeconds: reserveTime === "" ? 60 : Number(reserveTime) }),
