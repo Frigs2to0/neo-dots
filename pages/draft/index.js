@@ -4,6 +4,7 @@ import { useState } from "react"
 import Head from "next/head"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || ""
+const NGROK_HEADERS = { "ngrok-skip-browser-warning": "true" }
 
 export default function DraftCreate() {
   const [timer, setTimer] = useState("40")
@@ -17,7 +18,7 @@ export default function DraftCreate() {
     try {
       const res = await fetch(`${API_URL}/api/v1/draft`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", ...NGROK_HEADERS },
         body: JSON.stringify({ bans: 2, picks: 6, timerSeconds: timer === "" ? 40 : Number(timer), reserveSeconds: reserveTime === "" ? 60 : Number(reserveTime) }),
       })
       const data = await res.json()

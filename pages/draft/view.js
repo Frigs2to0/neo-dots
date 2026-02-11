@@ -3,8 +3,10 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import Head from "next/head"
 import { useRouter } from "next/router"
+import { EventSourcePolyfill } from "event-source-polyfill"
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || ""
+const NGROK_HEADERS = { "ngrok-skip-browser-warning": "true" }
 const HEROES_URL = "https://assets.deadlock-api.com/v2/heroes"
 
 function getHeroImage(hero) {
@@ -1159,7 +1161,9 @@ export default function DraftView() {
   useEffect(() => {
     if (!roomId || !token) return
 
-    const es = new EventSource(`${API_URL}/api/v1/draft/${roomId}/stream?token=${token}`)
+    const es = new EventSourcePolyfill(`${API_URL}/api/v1/draft/${roomId}/stream?token=${token}`, {
+      headers: NGROK_HEADERS
+    })
     eventSourceRef.current = es
 
     es.onmessage = (e) => {
@@ -1216,7 +1220,7 @@ export default function DraftView() {
     const heroId = isNoBan ? null : getHeroId(hero)
     await fetch(`${API_URL}/api/v1/draft/${roomId}/action`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...NGROK_HEADERS },
       body: JSON.stringify({
         token,
         heroId,
@@ -1278,7 +1282,7 @@ export default function DraftView() {
   async function handleReady() {
     await fetch(`${API_URL}/api/v1/draft/${roomId}/ready`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", ...NGROK_HEADERS },
       body: JSON.stringify({ token }),
     })
   }
