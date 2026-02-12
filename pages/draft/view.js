@@ -21,6 +21,16 @@ function getHeroName(hero) {
   return hero?.name ?? hero?.displayName ?? hero?.slug ?? "?"
 }
 
+function getLocalHeroImage(heroName, type) {
+  if (!heroName) return null
+  let name = heroName.toLowerCase()
+  // Normalizar nomes com "the" no início (ex: "The Doorman" -> "doorman")
+  if (name.startsWith("the ")) {
+    name = name.slice(4)
+  }
+  return `/heroes/Deadlock Heróis Fotos/${name} ${type}.png`
+}
+
 // ============================================================================
 // SEQUENCE INDICATOR - Visualização da ordem de picks/bans
 // ============================================================================
@@ -96,15 +106,28 @@ function SequenceIndicator({ sequence, stepIndex, finished }) {
 // STREAMER VIEW - Layout otimizado para stream (sem grade de heróis)
 // ============================================================================
 function StreamerView({ state, heroMap }) {
+  const ambarName = state.ambarName || "Âmbar"
+  const safiraName = state.safiraName || "Safira"
+
   const phaseLabel = state.finished
     ? "Draft Finalizado"
     : `${state.currentAction === "ban" ? "Ban" : "Pick"}`
 
-  const activeTeamLabel = state.currentTeam === "ambar" ? "Âmbar" : "Safira"
+  const activeTeamLabel = state.currentTeam === "ambar" ? ambarName : safiraName
   const activeTeamColor = state.currentTeam === "ambar" ? "#ffb010" : "#7b9aff"
 
-  function getSlotImage(entry) {
+  function getSlotImageForBan(entry) {
     if (!entry || !heroMap) return null
+    const localImage = getLocalHeroImage(entry.name, "ban")
+    if (localImage) return localImage
+    const hero = heroMap[entry.id]
+    return hero ? getHeroImage(hero) : null
+  }
+
+  function getSlotImageForPick(entry) {
+    if (!entry || !heroMap) return null
+    const localImage = getLocalHeroImage(entry.name, "pick")
+    if (localImage) return localImage
     const hero = heroMap[entry.id]
     return hero ? getHeroImage(hero) : null
   }
@@ -125,10 +148,10 @@ function StreamerView({ state, heroMap }) {
               <p>O draft iniciará automaticamente quando ambos os times confirmarem</p>
               <div className="team-status">
                 <p className={state.ambarReady ? "ready" : "waiting"}>
-                  Âmbar: {state.ambarReady ? "Pronto!" : "Aguardando..."}
+                  {ambarName}: {state.ambarReady ? "Pronto!" : "Aguardando..."}
                 </p>
                 <p className={state.safiraReady ? "ready" : "waiting"}>
-                  Safira: {state.safiraReady ? "Pronto!" : "Aguardando..."}
+                  {safiraName}: {state.safiraReady ? "Pronto!" : "Aguardando..."}
                 </p>
               </div>
             </div>
@@ -138,7 +161,7 @@ function StreamerView({ state, heroMap }) {
         {/* Layout: Time Âmbar | Câmera + Bans + Timer | Time Safira */}
         <main className="streamer-layout">
           <StreamerTeamPanel
-            label="Âmbar"
+            label={ambarName}
             team="ambar"
             picks={state.ambar.picks}
             maxPicks={state.config.picks}
@@ -157,13 +180,13 @@ function StreamerView({ state, heroMap }) {
 
             <div className="bans-section">
               <div className="bans-team bans-ambar">
-                <div className="bans-team-label">Bans Âmbar</div>
+                <div className="bans-team-label">Bans {ambarName}</div>
                 <div className="bans-grid">
                   {Array.from({ length: state.config.bans }).map((_, i) => {
                     const isActiveSlot = state.currentTeam === "ambar" && !state.finished && state.currentAction === "ban" && i === state.ambar.bans.length
                     const entry = state.ambar.bans[i]
                     const isNoBan = entry?.noBan || entry?.id === null
-                    const img = getSlotImage(entry)
+                    const img = getSlotImageForBan(entry)
                     return (
                       <div key={i} className={`ban-card ${entry ? "filled" : ""} ${isActiveSlot ? "active-slot" : ""} ${isNoBan ? "no-ban-card" : ""}`}>
                         {isNoBan ? (
@@ -172,9 +195,8 @@ function StreamerView({ state, heroMap }) {
                           <>
                             {img && (
                               // eslint-disable-next-line @next/next/no-img-element
-                              <img src={img} alt={entry.name} className="card-img banned-img" />
+                              <img src={img} alt={entry.name} className="card-img" />
                             )}
-                            {entry && <span className="ban-x-mark" />}
                           </>
                         )}
                         <span className="card-name">{entry ? entry.name : ""}</span>
@@ -184,13 +206,13 @@ function StreamerView({ state, heroMap }) {
                 </div>
               </div>
               <div className="bans-team bans-safira">
-                <div className="bans-team-label">Bans Safira</div>
+                <div className="bans-team-label">Bans {safiraName}</div>
                 <div className="bans-grid">
                   {Array.from({ length: state.config.bans }).map((_, i) => {
                     const isActiveSlot = state.currentTeam === "safira" && !state.finished && state.currentAction === "ban" && i === state.safira.bans.length
                     const entry = state.safira.bans[i]
                     const isNoBan = entry?.noBan || entry?.id === null
-                    const img = getSlotImage(entry)
+                    const img = getSlotImageForBan(entry)
                     return (
                       <div key={i} className={`ban-card ${entry ? "filled" : ""} ${isActiveSlot ? "active-slot" : ""} ${isNoBan ? "no-ban-card" : ""}`}>
                         {isNoBan ? (
@@ -199,9 +221,8 @@ function StreamerView({ state, heroMap }) {
                           <>
                             {img && (
                               // eslint-disable-next-line @next/next/no-img-element
-                              <img src={img} alt={entry.name} className="card-img banned-img" />
+                              <img src={img} alt={entry.name} className="card-img" />
                             )}
-                            {entry && <span className="ban-x-mark" />}
                           </>
                         )}
                         <span className="card-name">{entry ? entry.name : ""}</span>
@@ -248,7 +269,7 @@ function StreamerView({ state, heroMap }) {
           </div>
 
           <StreamerTeamPanel
-            label="Safira"
+            label={safiraName}
             team="safira"
             picks={state.safira.picks}
             maxPicks={state.config.picks}
@@ -444,20 +465,17 @@ function StreamerView({ state, heroMap }) {
           position: absolute;
           inset: 0;
         }
-        .bans-section .banned-img {
-          filter: grayscale(0.7) brightness(0.5);
-        }
         .bans-section .card-name {
           position: absolute;
           bottom: 0;
           left: 0;
           right: 0;
           background: linear-gradient(transparent, rgba(0,0,0,0.9));
-          color: #ccc;
-          font-size: 0.55rem;
-          font-weight: 600;
+          color: #e4e4e4;
+          font-size: 0.85rem;
+          font-weight: 700;
           text-align: center;
-          padding: 6px 2px 3px;
+          padding: 8px 3px 4px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -480,26 +498,6 @@ function StreamerView({ state, heroMap }) {
           color: #ff5555;
           font-weight: bold;
         }
-        .bans-section .ban-x-mark {
-          position: absolute;
-          inset: 0;
-          display: block;
-        }
-        .bans-section .ban-x-mark::before,
-        .bans-section .ban-x-mark::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 140%;
-          height: 3px;
-          background: #ff4444;
-          border-radius: 2px;
-          opacity: 0.8;
-        }
-        .bans-section .ban-x-mark::before { transform: translate(-50%, -50%) rotate(45deg); }
-        .bans-section .ban-x-mark::after { transform: translate(-50%, -50%) rotate(-45deg); }
-
         .timer-section {
           display: flex;
           align-items: center;
@@ -661,8 +659,10 @@ function StreamerTeamPanel({ label, team, picks, maxPicks, isActive, currentActi
   const teamColor = isAmbar ? "#ffb010" : "#7b9aff"
   const teamColorRgb = isAmbar ? "146,119,21" : "47,77,181"
 
-  function getSlotImage(entry) {
+  function getSlotImageForPick(entry) {
     if (!entry || !heroMap) return null
+    const localImage = getLocalHeroImage(entry.name, "pick")
+    if (localImage) return localImage
     const hero = heroMap[entry.id]
     return hero ? getHeroImage(hero) : null
   }
@@ -677,7 +677,7 @@ function StreamerTeamPanel({ label, team, picks, maxPicks, isActive, currentActi
           {Array.from({ length: maxPicks }).map((_, i) => {
             const isActiveSlot = isActive && currentAction === "pick" && i === picks.length
             const entry = picks[i]
-            const img = getSlotImage(entry)
+            const img = getSlotImageForPick(entry)
             return (
               <div key={i} className={`pick-card ${entry ? "filled" : ""} ${isActiveSlot ? "active-slot" : ""}`}>
                 {img && (
@@ -801,11 +801,11 @@ function StreamerTeamPanel({ label, team, picks, maxPicks, isActive, currentActi
           left: 0;
           right: 0;
           background: linear-gradient(transparent, rgba(0,0,0,0.9));
-          color: #ccc;
-          font-size: 0.6rem;
-          font-weight: 600;
+          color: #e4e4e4;
+          font-size: 1rem;
+          font-weight: 700;
           text-align: center;
-          padding: 8px 3px 4px;
+          padding: 12px 4px 6px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -1155,6 +1155,8 @@ export default function DraftView() {
   const [error, setError] = useState(null)
   const [pendingBan, setPendingBan] = useState(null)
   const [pendingPick, setPendingPick] = useState(null)
+  const [editingTeamName, setEditingTeamName] = useState("")
+  const [savingTeamName, setSavingTeamName] = useState(false)
   const eventSourceRef = useRef(null)
 
   // Connect to SSE
@@ -1277,6 +1279,8 @@ export default function DraftView() {
     return map
   }, [heroes])
 
+  const ambarName = state?.ambarName || "Âmbar"
+  const safiraName = state?.safiraName || "Safira"
   const canAct = state && state.started && !state.finished && role !== "streamer" && state.currentTeam === role
 
   async function handleReady() {
@@ -1285,6 +1289,22 @@ export default function DraftView() {
       headers: { "Content-Type": "application/json", ...NGROK_HEADERS },
       body: JSON.stringify({ token }),
     })
+  }
+
+  async function handleSaveTeamName() {
+    if (!editingTeamName.trim()) return
+    setSavingTeamName(true)
+    try {
+      await fetch(`${API_URL}/api/v1/draft/${roomId}/team-name`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", ...NGROK_HEADERS },
+        body: JSON.stringify({ token, teamName: editingTeamName.trim() }),
+      })
+      setEditingTeamName("")
+    } catch {
+    } finally {
+      setSavingTeamName(false)
+    }
   }
   const isMyTurn = canAct
 
@@ -1342,9 +1362,9 @@ export default function DraftView() {
 
   const phaseLabel = state.finished
     ? "Draft Finalizado"
-    : `${state.currentAction === "ban" ? "Ban" : "Pick"} — ${state.currentTeam === "ambar" ? "Âmbar" : "Safira"}`
+    : `${state.currentAction === "ban" ? "Ban" : "Pick"} — ${state.currentTeam === "ambar" ? ambarName : safiraName}`
 
-  const roleLabel = role === "streamer" ? "Streamer" : role === "ambar" ? "Time Âmbar" : "Time Safira"
+  const roleLabel = role === "streamer" ? "Streamer" : role === "ambar" ? `Time ${ambarName}` : `Time ${safiraName}`
 
   const activeTeamColor = state.currentTeam === "ambar" ? "#ffb010" : "#7b9aff"
 
@@ -1381,16 +1401,38 @@ export default function DraftView() {
             <h2>Aguardando Times</h2>
             <div className="ready-status">
               <p className={state.ambarReady ? "ready" : "waiting"}>
-                Âmbar: {state.ambarReady ? "Pronto!" : "Aguardando..."}
+                {ambarName}: {state.ambarReady ? "Pronto!" : "Aguardando..."}
               </p>
               <p className={state.safiraReady ? "ready" : "waiting"}>
-                Safira: {state.safiraReady ? "Pronto!" : "Aguardando..."}
+                {safiraName}: {state.safiraReady ? "Pronto!" : "Aguardando..."}
               </p>
             </div>
             {!state[`${role}Ready`] && (
-              <button onClick={handleReady} className="ready-btn">
-                Pronto
-              </button>
+              <>
+                <div className="team-name-edit">
+                  <label className="team-name-label">Nome do seu time:</label>
+                  <div className="team-name-input-row">
+                    <input
+                      type="text"
+                      className="team-name-input"
+                      placeholder={role === "ambar" ? ambarName : safiraName}
+                      value={editingTeamName}
+                      onChange={(e) => setEditingTeamName(e.target.value)}
+                      maxLength={20}
+                    />
+                    <button
+                      className="team-name-save"
+                      onClick={handleSaveTeamName}
+                      disabled={savingTeamName || !editingTeamName.trim()}
+                    >
+                      {savingTeamName ? "..." : "Salvar"}
+                    </button>
+                  </div>
+                </div>
+                <button onClick={handleReady} className="ready-btn">
+                  Pronto
+                </button>
+              </>
             )}
             {state[`${role}Ready`] && (
               <p className="ready-confirmed">Você confirmou! Aguardando o outro time...</p>
@@ -1424,7 +1466,7 @@ export default function DraftView() {
 
         <main className="layout">
           <TeamPanel
-            label="Âmbar"
+            label={ambarName}
             team="ambar"
             picks={state.ambar.picks}
             maxPicks={state.config.picks}
@@ -1488,7 +1530,7 @@ export default function DraftView() {
             </div>
             <div className="bans-footer">
               <BansRow
-                label="Bans Âmbar"
+                label={`Bans ${ambarName}`}
                 team="ambar"
                 bans={state.ambar.bans}
                 maxBans={state.config.bans}
@@ -1497,7 +1539,7 @@ export default function DraftView() {
                 heroMap={heroMap}
               />
               <BansRow
-                label="Bans Safira"
+                label={`Bans ${safiraName}`}
                 team="safira"
                 bans={state.safira.bans}
                 maxBans={state.config.bans}
@@ -1509,7 +1551,7 @@ export default function DraftView() {
           </section>
 
           <TeamPanel
-            label="Safira"
+            label={safiraName}
             team="safira"
             picks={state.safira.picks}
             maxPicks={state.config.picks}
@@ -1652,6 +1694,7 @@ export default function DraftView() {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
           gap: 4px;
+          padding: 4px;
         }
         .hero {
           position: relative;
@@ -1803,6 +1846,51 @@ export default function DraftView() {
           font-weight: 600;
           margin: 0;
         }
+        .team-name-edit {
+          margin-bottom: 1.5rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .team-name-label {
+          font-size: 0.9rem;
+          color: #999;
+          font-weight: 600;
+        }
+        .team-name-input-row {
+          display: flex;
+          gap: 0.5rem;
+        }
+        .team-name-input {
+          flex: 1;
+          background: #2a2a2a;
+          border: 1px solid rgba(255,255,255,0.15);
+          border-radius: 8px;
+          padding: 0.6rem 0.8rem;
+          color: #e4e4e4;
+          font-size: 1rem;
+        }
+        .team-name-input::placeholder {
+          color: #666;
+        }
+        .team-name-save {
+          background: linear-gradient(135deg, #444, #333);
+          border: 1px solid rgba(255,255,255,0.15);
+          border-radius: 8px;
+          padding: 0.6rem 1rem;
+          color: #e4e4e4;
+          font-size: 0.9rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .team-name-save:hover:not(:disabled) {
+          background: linear-gradient(135deg, #555, #444);
+        }
+        .team-name-save:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
 
         @media (max-width: 800px) {
           .page {
@@ -1832,8 +1920,10 @@ function TeamPanel({ label, team, picks, maxPicks, isActive, currentAction, hero
   const teamColor = isAmbar ? "#ffb010" : "#7b9aff"
   const teamColorRgb = isAmbar ? "146,119,21" : "47,77,181"
 
-  function getSlotImage(entry) {
+  function getSlotImageForPick(entry) {
     if (!entry || !heroMap) return null
+    const localImage = getLocalHeroImage(entry.name, "pick")
+    if (localImage) return localImage
     const hero = heroMap[entry.id]
     return hero ? getHeroImage(hero) : null
   }
@@ -1845,11 +1935,10 @@ function TeamPanel({ label, team, picks, maxPicks, isActive, currentAction, hero
       </div>
       <h2 className={`team-name ${isActive ? "team-active" : ""}`}>{label}</h2>
 
-      <div className="section-label">Picks</div>
       <div className="slots">
         {Array.from({ length: maxPicks }).map((_, i) => {
           const isActiveSlot = isActive && currentAction === "pick" && i === picks.length
-          const img = getSlotImage(picks[i])
+          const img = getSlotImageForPick(picks[i])
           return (
             <div key={i} className={`slot ${picks[i] ? "filled" : ""} ${isActiveSlot ? "active-slot" : ""}`}>
               {img && (
@@ -1862,8 +1951,7 @@ function TeamPanel({ label, team, picks, maxPicks, isActive, currentAction, hero
         })}
       </div>
 
-      <div className="team-name-bottom">{label}</div>
-
+      
       <style jsx>{`
         .panel {
           background: linear-gradient(${isAmbar ? "135deg" : "225deg"}, rgba(${teamColorRgb},0.08) 0%, rgba(0,0,0,0.3) 100%);
@@ -1922,15 +2010,6 @@ function TeamPanel({ label, team, picks, maxPicks, isActive, currentAction, hero
           from { opacity: 1; }
           to { opacity: 0.65; }
         }
-        .section-label {
-          font-size: 0.6rem;
-          text-transform: uppercase;
-          letter-spacing: 0.12em;
-          color: #666;
-          font-weight: 700;
-          margin-top: 0.15rem;
-          flex-shrink: 0;
-        }
         .slots {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
@@ -1966,11 +2045,12 @@ function TeamPanel({ label, team, picks, maxPicks, isActive, currentAction, hero
           left: 0;
           right: 0;
           background: linear-gradient(transparent, rgba(0,0,0,0.85));
-          padding: 6px 2px 2px;
+          padding: 8px 3px 4px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          font-size: 0.55rem;
+          font-size: 0.85rem;
+          font-weight: 600;
         }
         .slot:not(.filled) .slot-name {
           position: static;
@@ -1995,22 +2075,9 @@ function TeamPanel({ label, team, picks, maxPicks, isActive, currentAction, hero
           100% { background-position: 200% 0; }
         }
 
-        .team-name-bottom {
-          color: ${teamColor};
-          font-size: 0.9rem;
-          font-weight: 800;
-          text-transform: uppercase;
-          text-align: center;
-          letter-spacing: 0.08em;
-          margin-top: auto;
-          padding-top: 0.5rem;
-          opacity: 0.6;
-        }
-
         @media (max-width: 800px) {
           .panel { border: none; border-bottom: 2px solid rgba(${teamColorRgb},0.3); }
           .panel.active { border-bottom-color: ${teamColor}; }
-          .team-name-bottom { display: none; }
         }
       `}</style>
     </aside>
@@ -2022,8 +2089,10 @@ function BansRow({ label, team, bans, maxBans, isActive, currentAction, heroMap 
   const teamColor = isAmbar ? "#ffb010" : "#7b9aff"
   const teamColorRgb = isAmbar ? "146,119,21" : "47,77,181"
 
-  function getSlotImage(entry) {
+  function getSlotImageForBan(entry) {
     if (!entry || !heroMap) return null
+    const localImage = getLocalHeroImage(entry.name, "ban")
+    if (localImage) return localImage
     const hero = heroMap[entry.id]
     return hero ? getHeroImage(hero) : null
   }
@@ -2036,7 +2105,7 @@ function BansRow({ label, team, bans, maxBans, isActive, currentAction, heroMap 
           const isActiveSlot = isActive && currentAction === "ban" && i === bans.length
           const entry = bans[i]
           const isNoBan = entry?.noBan || entry?.id === null
-          const img = getSlotImage(entry)
+          const img = getSlotImageForBan(entry)
           return (
             <div key={i} className={`ban-slot ${entry ? "filled" : ""} ${isActiveSlot ? "active-slot" : ""} ${isNoBan ? "no-ban-slot" : ""}`}>
               {isNoBan ? (
@@ -2047,7 +2116,6 @@ function BansRow({ label, team, bans, maxBans, isActive, currentAction, heroMap 
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={img} alt={entry.name} className="ban-img" />
                   )}
-                  {entry && <span className="ban-x-mark" />}
                 </>
               )}
               <span className="ban-name">{entry ? entry.name : ""}</span>
@@ -2105,7 +2173,6 @@ function BansRow({ label, team, bans, maxBans, isActive, currentAction, heroMap 
           width: 100%;
           height: 100%;
           object-fit: cover;
-          filter: grayscale(0.6) brightness(0.55);
           position: absolute;
           inset: 0;
         }
@@ -2115,15 +2182,16 @@ function BansRow({ label, team, bans, maxBans, isActive, currentAction, heroMap 
           left: 0;
           right: 0;
           background: linear-gradient(transparent, rgba(0,0,0,0.85));
-          padding: 4px 2px 2px;
+          padding: 6px 2px 3px;
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
-          font-size: 0.45rem;
+          font-size: 0.7rem;
+          font-weight: 600;
           color: #888;
         }
         .ban-slot.filled .ban-name {
-          color: #ff5555;
+          color: #ff6666;
           text-decoration: line-through;
         }
         .ban-slot.no-ban-slot .ban-name {
@@ -2154,26 +2222,7 @@ function BansRow({ label, team, bans, maxBans, isActive, currentAction, heroMap 
           0% { background-position: -200% 0; }
           100% { background-position: 200% 0; }
         }
-        .ban-x-mark {
-          position: absolute;
-          inset: 0;
-          display: block;
-        }
-        .ban-x-mark::before,
-        .ban-x-mark::after {
-          content: '';
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 140%;
-          height: 2px;
-          background: #ff4444;
-          border-radius: 2px;
-          opacity: 0.8;
-        }
-        .ban-x-mark::before { transform: translate(-50%, -50%) rotate(45deg); }
-        .ban-x-mark::after { transform: translate(-50%, -50%) rotate(-45deg); }
-      `}</style>
+        `}</style>
     </div>
   )
 }

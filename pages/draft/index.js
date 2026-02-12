@@ -201,6 +201,13 @@ export default function DraftCreate() {
         }
         .btn-new:hover { background: rgba(255,255,255,0.05); }
       `}</style>
+
+      <style jsx global>{`
+        html, body {
+          margin: 0;
+          padding: 0;
+        }
+      `}</style>
     </>
   )
 }
