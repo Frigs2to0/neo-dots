@@ -1186,16 +1186,11 @@ export default function DraftView() {
     }
 
     return () => es.close()
-  }, [roomId, token])
-
-  // Lista de heróis a ocultar (modificar aqui para mostrar/esconder)
-  const HIDDEN_HEROES = ["Celeste", "Apollo"]
+  }, [roomId, token])  
 
   const sortedHeroes = useMemo(() => {
     return heroes
       .filter((h) => !h.in_development && !h.disabled)
-      // Filtrar heróis ocultos - remover esta linha para mostrar todos
-      .filter((h) => !HIDDEN_HEROES.includes(getHeroName(h)))
       .sort((a, b) => getHeroName(a).localeCompare(getHeroName(b)))
   }, [heroes])
 
